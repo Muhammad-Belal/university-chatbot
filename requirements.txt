@@ -1,0 +1,7 @@
+groq
+sentence-transformers
+streamlit
+pymongo
+bcrypt
+pinecone-client==3.0.0
+PyPDF2
