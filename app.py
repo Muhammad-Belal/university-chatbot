@@ -30,12 +30,14 @@ def search_pinecone(question, top_k=3):
 def generate_answer(question, relevant_chunks):
     context = "\n\n".join([chunk.metadata['text'] for chunk in relevant_chunks])
     sources = list(set([chunk.metadata['source'] for chunk in relevant_chunks]))
-    prompt = You are a helpful university chatbot assistant for Islamia University Bahawalpur.
-Detect the language of the student's question automatically.
+    prompt = prompt = f"""You are a helpful university chatbot assistant for Islamia University Bahawalpur.
+Detect the language of the question automatically.
 If the question is in Urdu script, reply in Urdu.
 If the question is in Roman Urdu (Urdu written in English letters), reply in Roman Urdu.
 If the question is in English, reply in English.
-Use ONLY the following university document information...
+Use ONLY the following university document information to answer the question.
+If the answer is not in the documents, say you do not have information about this.
+Be clear, helpful and professional.
 
 University Documents:
 {context}
