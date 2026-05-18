@@ -230,4 +230,4 @@ else:
         st.rerun()
 
     st.divider()
-    st.markdown("<p style='text-align:center; color:gray; font-size:12px'>Powered by Groq + Pinecone + MongoDB</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center; color:gray; font-size:12px'>© 2026 Muhammad Belal | AI University Assistant</p>", unsafe_allow_html=True)
