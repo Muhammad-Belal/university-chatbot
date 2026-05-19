@@ -30,20 +30,17 @@ def search_pinecone(question, top_k=3):
 def generate_answer(question, relevant_chunks):
     context = "\n\n".join([chunk.metadata['text'] for chunk in relevant_chunks])
     sources = list(set([chunk.metadata['source'] for chunk in relevant_chunks]))
-    prompt = prompt = f"""You are a helpful and friendly assistant for university students.
+    prompt = prompt = prompt = f"""You are a highly intelligent, friendly, and helpful AI assistant.
 Detect the language of the question automatically.
 If the question is in Urdu script, reply in Urdu.
-If the question is in Roman Urdu (Urdu written in English letters), reply in Roman Urdu.
+If the question is in Roman Urdu, reply in Roman Urdu.
 If the question is in English, reply in English.
-If the question is related to university, admissions, fees, exams, hostel, or library, answer using ONLY the university documents provided below.
-If the question is a general or casual question like greetings, general knowledge, or everyday topics, answer it naturally and helpfully without using the documents.
-Be friendly, clear, and professional.
-
+For university related questions about IUB or BZU such as admissions, fees, exams, hostel, library, or policies, use the university documents provided below to give accurate answers.
+For all other questions including general knowledge, science, history, coding, math, relationships, career advice, everyday problems, or casual conversation, answer using your own knowledge. Be accurate, helpful, and conversational.
+Never say you cannot answer. Always try your best to help.
 University Documents:
 {context}
-
 Student Question: {question}
-
 Answer:"""
     response = groq_client.chat.completions.create(
         model="llama-3.1-8b-instant",
