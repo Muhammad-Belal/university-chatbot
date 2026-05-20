@@ -16,8 +16,8 @@ db = client["university_db"]
 users_collection = db["users"]
 chat_collection = db["chat_history"]
 
-IUB_LOGO = "https://upload.wikimedia.org/wikipedia/en/a/a8/Islamia_University_of_Bahawalpur_logo.png"
-BZU_LOGO = "https://upload.wikimedia.org/wikipedia/en/1/1b/Bahauddin_Zakariya_University_logo.png"
+IUB_LOGO = "iub_logo.png"
+BZU_LOGO = "bzu_logo.png"
 
 def get_embedding(text):
     return embedding_model.encode(text).tolist()
