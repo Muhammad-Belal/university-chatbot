@@ -256,6 +256,8 @@ hr {
     object-fit: contain;
     margin-bottom: 12px;
     border-radius: 8px;
+    background: transparent;
+    mix-blend-mode: multiply;
 }
 .uni-card h4 {
     margin: 0 0 4px;
@@ -383,13 +385,13 @@ else:
     uni_color = "#1a1a1a"
 
     # Header
-    h1, h2, h3 = st.columns([1, 6, 1])
+    h1, h2, h3 = st.columns([1, 5, 2])
     with h1:
-        st.markdown(f"<img src='{logo}' style='width:48px;height:48px;object-fit:contain;border-radius:8px;margin-top:6px;'>", unsafe_allow_html=True)
+        st.markdown(f"<img src='{logo}' style='width:48px;height:48px;object-fit:contain;border-radius:8px;margin-top:6px;mix-blend-mode:multiply;'>", unsafe_allow_html=True)
     with h2:
         st.markdown(f"<div style='padding-top:4px;'><p style='margin:0;font-weight:600;font-size:17px;color:#1a1a1a;'>{uni} AI Assistant</p><p style='margin:0;font-size:12px;color:#8a8a8a;'>{uni_full} &mdash; {st.session_state.full_name}</p></div>", unsafe_allow_html=True)
     with h3:
-        if st.button("Switch", key="sw"):
+        if st.button("↩ Switch Uni", key="sw"):
             st.session_state.university = None
             st.session_state.messages = []
             st.rerun()
@@ -397,13 +399,19 @@ else:
 
     # Sidebar
     with st.sidebar:
-        st.markdown(f"<img src='{logo}' style='width:72px;height:72px;object-fit:contain;border-radius:8px;display:block;margin:0 auto 12px;'>", unsafe_allow_html=True)
+        st.markdown(f"<img src='{logo}' style='width:72px;height:72px;object-fit:contain;border-radius:8px;display:block;margin:0 auto 12px;mix-blend-mode:multiply;'>", unsafe_allow_html=True)
         st.markdown("<p style='font-weight:600;font-size:13px;color:#4b4b4b;margin-bottom:8px;'>Recent Chats</p>", unsafe_allow_html=True)
         hist = get_history(st.session_state.username)
         if hist:
-            for h in hist:
-                q = h["question"][:44]+"..." if len(h["question"])>44 else h["question"]
-                st.markdown(f"<div class='hist-item'>{q}</div>", unsafe_allow_html=True)
+            for i, h in enumerate(hist):
+                q = h["question"][:35]+"..." if len(h["question"])>35 else h["question"]
+                c1, c2 = st.columns([5, 1])
+                with c1:
+                    st.markdown(f"<div class='hist-item'>{q}</div>", unsafe_allow_html=True)
+                with c2:
+                    if st.button("🗑️", key=f"del_{i}", help="Delete this chat"):
+                        chats_col.delete_one({"_id": h["_id"]})
+                        st.rerun()
         else:
             st.markdown("<p style='color:#b4b4b4;font-size:13px;'>No history yet.</p>", unsafe_allow_html=True)
         st.markdown("<hr>", unsafe_allow_html=True)
