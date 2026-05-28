@@ -414,7 +414,7 @@ else:
                 with c1:
                     st.markdown(f"<div class='hist-item'>{q}</div>", unsafe_allow_html=True)
                 with c2:
-                    if st.button("🗑️", key=f"del_{i}", help="Delete this chat"):
+                    if st.button("🗑️", key=f"del_{i}", help="Delete"):
                         chats_col.delete_one({"_id": h["_id"]})
                         st.rerun()
         else:
