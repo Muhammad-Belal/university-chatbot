@@ -17,7 +17,7 @@ db = mongo["university_db"]
 users_col = db["users"]
 chats_col = db["chat_history"]
 
-# ── Knowledge Base ──         ← yahan laga do
+# ── Knowledge Base ──
 from knowledge_base import UNIVERSITY_KNOWLEDGE
 
 # ── Logos (base64 so they always work on Streamlit Cloud) ──
@@ -59,30 +59,35 @@ def get_answer(question, chunks, university):
     context = "\n\n".join([c.metadata["text"] for c in chunks])
     sources = list(set([c.metadata["source"] for c in chunks]))
     
-    # ← yeh ek line add karo
-    extra_knowledge = UNIVERSITY_KNOWLEDGE
-    
+    # University ke hisaab se knowledge base ka part lo
+    if university == "IUB":
+        extra_knowledge = UNIVERSITY_KNOWLEDGE[:4000]
+    else:
+        bzu_start = UNIVERSITY_KNOWLEDGE.find("BZU")
+        extra_knowledge = UNIVERSITY_KNOWLEDGE[bzu_start:bzu_start+4000]
+
     prompt = f"""You are a smart, friendly AI assistant for {university} university students.
 
 LANGUAGE RULES — follow these strictly, no mixing allowed:
-- If the question is in English only → reply in English only
-- If the question is in Roman Urdu → reply in Roman Urdu only
+- If the question is in English only → reply in English only, no Urdu words at all
+- If the question is in Roman Urdu → reply in Roman Urdu only, no Urdu script at all
 - If the question is in Urdu script → reply in Urdu script only
 - Never mix languages
 
 ANSWER RULES:
-- First check the Documents below, then check Additional Knowledge
-- Use whichever source has better information
+- First check Documents, then check Additional Knowledge
+- Use whichever has better information
 - Be helpful, friendly and conversational
 
-Documents (from vector search):
+Documents:
 {context}
 
-Additional Knowledge Base:
+Additional Knowledge:
 {extra_knowledge}
 
 Question: {question}
 Answer:"""
+
     res = groq_client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}],
