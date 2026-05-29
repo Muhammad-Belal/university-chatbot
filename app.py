@@ -59,39 +59,58 @@ def get_answer(question, chunks, university):
     context = "\n\n".join([c.metadata["text"] for c in chunks])
     sources = list(set([c.metadata["source"] for c in chunks]))
 
-    # Question ke related section dhundo knowledge base mein
     q_lower = question.lower()
-    keywords = ["attendance", "exam", "fee", "hostel", "admission", "department", 
+    keywords = ["attendance", "exam", "fee", "hostel", "admission", "department",
                 "program", "scholarship", "library", "semester", "result", "campus",
                 "engineering", "medical", "computer", "science", "arts", "law"]
-    
+
+    # University ke hisaab se sahi section lo
+    if university == "BZU":
+        bzu_idx = UNIVERSITY_KNOWLEDGE.find("BZU")
+        if bzu_idx == -1:
+            bzu_idx = UNIVERSITY_KNOWLEDGE.find("Bahauddin")
+        uni_section = UNIVERSITY_KNOWLEDGE[bzu_idx:] if bzu_idx != -1 else UNIVERSITY_KNOWLEDGE
+    else:
+        iub_end = UNIVERSITY_KNOWLEDGE.find("BZU")
+        if iub_end == -1:
+            iub_end = UNIVERSITY_KNOWLEDGE.find("Bahauddin")
+        uni_section = UNIVERSITY_KNOWLEDGE[:iub_end] if iub_end != -1 else UNIVERSITY_KNOWLEDGE
+
+    # Keyword se relevant section dhundo
     extra_knowledge = ""
     for kw in keywords:
         if kw in q_lower:
-            idx = UNIVERSITY_KNOWLEDGE.lower().find(kw)
+            idx = uni_section.lower().find(kw)
             if idx != -1:
-                extra_knowledge = UNIVERSITY_KNOWLEDGE[max(0, idx-200):idx+3000]
+                extra_knowledge = uni_section[max(0, idx-200):idx+3000]
                 break
-    
+
     if not extra_knowledge:
-        extra_knowledge = UNIVERSITY_KNOWLEDGE[:3000]
+        extra_knowledge = uni_section[:3000]
 
     prompt = f"""You are a smart, friendly AI assistant for {university} university students.
 
-LANGUAGE RULES — follow these strictly, no mixing allowed:
-- If the question is in English only → reply in English only, no Urdu words at all
-- If the question is in Roman Urdu (Urdu words written in English letters like "kya", "hai", "fee") → reply in Roman Urdu only, no Urdu script at all
-- If the question is in Urdu script → reply in Urdu script only
-- Never mix languages. Never add notes like "(Note: this answer is in Roman Urdu)"
-- Never mention which language you are replying in
+LANGUAGE RULES — follow strictly, no mixing allowed:
+- English question → English reply only
+- Roman Urdu question → Roman Urdu reply only
+- Urdu script question → Urdu script reply only
+- Never mix languages, never mention which language you are using
+
+FORMAT RULES — always follow this structure:
+- Give detailed answers using bullet points (•)
+- Use sub-bullets (→) for extra details
+- Bold the main heading like **Fee Structure:**
+- Give 3-5 bullet points per answer — not too short, not too long
+- End with a helpful tip starting with 💡
 
 ANSWER RULES:
-- First check Documents below, then check Knowledge Base
-- Use whichever source has better and more detailed information
-- Never say "visit the website" or "I don't have info" if any source has something related
-- Be helpful, friendly and conversational
+- First check Documents, then Knowledge Base
+- Both IUB and BZU questions must get equally detailed answers
+- Never say "data not available" or "visit website" if any source has info
+- Always extract and present whatever information is available
+- Be helpful, friendly and to the point
 
-Documents (from vector search):
+Documents:
 {context}
 
 Knowledge Base:
@@ -103,7 +122,7 @@ Answer:"""
     res = groq_client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=500
+        max_tokens=700
     )
     return res.choices[0].message.content, sources
 
