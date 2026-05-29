@@ -17,6 +17,9 @@ db = mongo["university_db"]
 users_col = db["users"]
 chats_col = db["chat_history"]
 
+# ── Knowledge Base ──         ← yahan laga do
+from knowledge_base import UNIVERSITY_KNOWLEDGE
+
 # ── Logos (base64 so they always work on Streamlit Cloud) ──
 from assets import IUB_LOGO, BZU_LOGO
 
