@@ -318,8 +318,13 @@ hr {
 
 /* Spinner */
 .stSpinner > div { border-top-color: #1a1a1a !important; }
+
+/* Sidebar toggle button always visible */
+[data-testid="collapsedControl"] {
+    display: block !important;
+    visibility: visible !important;
+}
 </style>
-""", unsafe_allow_html=True)
 
 # ── Session state init ──
 for key, val in {"logged_in": False, "username": "", "full_name": "", "messages": [], "university": None}.items():
