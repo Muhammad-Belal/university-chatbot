@@ -500,51 +500,22 @@ else:
         del st.session_state.pending
 
     if to_process:
-    st.session_state.messages.append({
-        "role": "user",
-        "content": to_process
-    })
-
-    with st.spinner(""):
-
-        # University prefix
-        prefix = "iub" if uni == "IUB" else "bzu"
-
-        # Search relevant docs
-        docs = search_docs(to_process, prefix)
-
-        # Generate answer
-        ans, srcs = get_answer(to_process, docs, uni)
-
-        # Keywords check
-        uni_kw = [
-            "fee", "admission", "hostel", "exam", "library",
-            "attendance", "scholarship", "department",
-            "iub", "bzu", "university", "policy",
-            "semester", "result"
-        ]
-
-        is_uni_q = any(w in to_process.lower() for w in uni_kw)
-
-        # Final answer
-        full_ans = ans
-
-        if srcs and is_uni_q:
-            full_ans += f"\n\n&#128196; *Sources: {', '.join(srcs)}*"
-
-        # Save assistant message
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": full_ans
-        })
-
-        # Save chat in DB
-        save_chat(
-            st.session_state.username,
-            to_process,
-            full_ans
-        )
-        st.rerun()
+        st.session_state.messages.append({"role": "user", "content": to_process})
+        with st.spinner(""):
+            prefix = "iub" if uni == "IUB" else "bzu"
+            docs = search_docs(to_process, prefix)
+            ans, srcs = get_answer(to_process, docs, uni)
+            uni_kw = ["fee", "admission", "hostel", "exam", "library",
+                      "attendance", "scholarship", "department",
+                      "iub", "bzu", "university", "policy",
+                      "semester", "result"]
+            is_uni_q = any(w in to_process.lower() for w in uni_kw)
+            full_ans = ans
+            if srcs and is_uni_q:
+                full_ans += f"\n\n&#128196; *Sources: {', '.join(srcs)}*"
+            st.session_state.messages.append({"role": "assistant", "content": full_ans})
+            save_chat(st.session_state.username, to_process, full_ans)
+            st.rerun()
 
     st.markdown("<hr>", unsafe_allow_html=True)
     st.markdown("<div class='footer'>&#169; 2026 Muhammad Belal &nbsp;|&nbsp; AI University Assistant</div>", unsafe_allow_html=True)
