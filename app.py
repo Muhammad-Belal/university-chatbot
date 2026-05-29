@@ -440,15 +440,25 @@ else:
                 st.session_state[k] = False if k=="logged_in" else (None if k=="university" else ("" if k!="messages" else []))
             st.rerun()
 
-    # Messages
-    for msg in st.session_state.messages:
+   # Messages
+    for i, msg in enumerate(st.session_state.messages):
         if msg["role"] == "user":
             st.markdown(f"<div class='user-msg'><div class='user-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
         else:
             st.markdown(f"<div class='bot-msg'><div class='bot-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
-
+            col1, col2, col3, col4 = st.columns([1,1,1,10])
+            with col1:
+                if st.button("📋", key=f"copy_{i}", help="Copy"):
+                    st.toast("Copied! ✓")
+            with col2:
+                if st.button("👍", key=f"like_{i}", help="Good response"):
+                    st.toast("Thanks! 😊")
+            with col3:
+                if st.button("👎", key=f"dislike_{i}", help="Bad response"):
+                    st.toast("Sorry! We'll improve 🙏")
+            with col4:
+                st.empty()
     st.write("")
-
     # Quick buttons
     st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
     q1, q2, q3 = st.columns(3)
