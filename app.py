@@ -7,7 +7,7 @@ from datetime import datetime
 import bcrypt
 import os
 
-# ── Connections ──
+# -- Connections --
 groq_client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 pc = Pinecone(api_key=os.environ.get("PINECONE_API_KEY"))
@@ -17,13 +17,13 @@ db = mongo["university_db"]
 users_col = db["users"]
 chats_col = db["chat_history"]
 
-# ── Knowledge Base ──
+# -- Knowledge Base --
 from knowledge_base import UNIVERSITY_KNOWLEDGE
 
-# ── Logos (base64 so they always work on Streamlit Cloud) ──
+# -- Logos --
 from assets import IUB_LOGO, BZU_LOGO
 
-# ── DB helpers ──
+# -- DB helpers --
 def verify_user(username, password):
     user = users_col.find_one({"username": username})
     if not user:
@@ -45,7 +45,7 @@ def save_chat(username, question, answer):
 def get_history(username):
     return list(chats_col.find({"username": username}).sort("timestamp", -1).limit(10))
 
-# ── AI helpers ──
+# -- AI helpers --
 def get_embedding(text):
     return embedding_model.encode(text).tolist()
 
@@ -64,7 +64,6 @@ def get_answer(question, chunks, university):
                 "program", "scholarship", "library", "semester", "result", "campus",
                 "engineering", "medical", "computer", "science", "arts", "law"]
 
-    # University ke hisaab se sahi section lo
     if university == "BZU":
         bzu_idx = UNIVERSITY_KNOWLEDGE.find("BZU")
         if bzu_idx == -1:
@@ -76,7 +75,6 @@ def get_answer(question, chunks, university):
             iub_end = UNIVERSITY_KNOWLEDGE.find("Bahauddin")
         uni_section = UNIVERSITY_KNOWLEDGE[:iub_end] if iub_end != -1 else UNIVERSITY_KNOWLEDGE
 
-    # Keyword se relevant section dhundo
     extra_knowledge = ""
     for kw in keywords:
         if kw in q_lower:
@@ -90,22 +88,22 @@ def get_answer(question, chunks, university):
 
     prompt = f"""You are a smart, friendly AI assistant for {university} university students.
 
-LANGUAGE RULES — follow strictly, no mixing allowed:
-- English question → English reply only
-- Roman Urdu question → Roman Urdu reply only
-- Urdu script question → Urdu script reply only
+LANGUAGE RULES - follow strictly, no mixing allowed:
+- English question -> English reply only
+- Roman Urdu question -> Roman Urdu reply only
+- Urdu script question -> Urdu script reply only
 - Never mix languages, never mention which language you are using
 
 QUESTION TYPE RULES:
-- If question is a greeting or general chat (like "kya hal ha", "hello", "how are you") → reply naturally and friendly, DO NOT use university data
-- If question is about university → use Documents and Knowledge Base
+- If question is a greeting or general chat (like "kya hal ha", "hello", "how are you") -> reply naturally and friendly, DO NOT use university data
+- If question is about university -> use Documents and Knowledge Base
 
-FORMAT RULES — always follow this structure:
-- Give detailed answers using bullet points (•)
-- Use sub-bullets (→) for extra details
+FORMAT RULES - always follow this structure:
+- Give detailed answers using bullet points (*)
+- Use sub-bullets (->) for extra details
 - Bold the main heading like **Fee Structure:**
-- Give 3-5 bullet points per answer — not too short, not too long
-- End with a helpful tip starting with 💡
+- Give 3-5 bullet points per answer - not too short, not too long
+- End with a helpful tip starting with Tip:
 
 ANSWER RULES:
 - First check Documents, then Knowledge Base
@@ -130,13 +128,13 @@ Answer:"""
     )
     return res.choices[0].message.content, sources
 
-# ── Page config ──
+# -- Page config --
 st.set_page_config(page_title="University AI Assistant", page_icon="🎓", layout="centered")
 
-# ── CSS — exact Claude.ai style ──
+# -- CSS --
 st.markdown("""
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Söhne:wght@400;500;600&family=Inter:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -146,11 +144,9 @@ html, body, [class*="css"], .stApp {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif !important;
 }
 
-/* Hide streamlit default stuff */
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton { display: none; }
 
-/* Inputs */
 .stTextInput > div > div > input {
     background: #ffffff !important;
     border: 1px solid #e5e5e5 !important;
@@ -171,7 +167,6 @@ html, body, [class*="css"], .stApp {
     font-weight: 500 !important;
 }
 
-/* All buttons default = outlined */
 .stButton > button {
     background: #ffffff !important;
     color: #1a1a1a !important;
@@ -188,7 +183,6 @@ html, body, [class*="css"], .stApp {
     border-color: #d0d0d0 !important;
 }
 
-/* Primary button = dark filled */
 .stButton > button[kind="primary"] {
     background: #1a1a1a !important;
     color: #ffffff !important;
@@ -198,7 +192,6 @@ html, body, [class*="css"], .stApp {
     background: #333333 !important;
 }
 
-/* Tabs */
 .stTabs [data-baseweb="tab-list"] {
     border-bottom: 1px solid #e5e5e5 !important;
     gap: 0 !important;
@@ -217,7 +210,6 @@ html, body, [class*="css"], .stApp {
     border-bottom: 2px solid #1a1a1a !important;
 }
 
-/* Sidebar */
 [data-testid="stSidebar"] {
     background-color: #f9f9f9 !important;
     border-right: 1px solid #e5e5e5 !important;
@@ -226,14 +218,12 @@ html, body, [class*="css"], .stApp {
     color: #1a1a1a !important;
 }
 
-/* Divider */
 hr {
     border: none !important;
     border-top: 1px solid #e5e5e5 !important;
     margin: 12px 0 !important;
 }
 
-/* Chat bubbles */
 .user-msg {
     display: flex;
     justify-content: flex-end;
@@ -263,7 +253,6 @@ hr {
     line-height: 1.6;
 }
 
-/* History items */
 .hist-item {
     padding: 8px 12px;
     border-radius: 8px;
@@ -277,7 +266,6 @@ hr {
     text-overflow: ellipsis;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     color: #b4b4b4;
@@ -286,7 +274,6 @@ hr {
     padding-bottom: 8px;
 }
 
-/* Uni cards */
 .uni-card {
     border: 1px solid #e5e5e5;
     border-radius: 12px;
@@ -316,23 +303,22 @@ hr {
     color: #8a8a8a;
 }
 
-/* Spinner */
 .stSpinner > div { border-top-color: #1a1a1a !important; }
 
-/* Sidebar toggle button always visible */
 [data-testid="collapsedControl"] {
     display: block !important;
     visibility: visible !important;
 }
 </style>
+""", unsafe_allow_html=True)
 
-# ── Session state init ──
+# -- Session state init --
 for key, val in {"logged_in": False, "username": "", "full_name": "", "messages": [], "university": None}.items():
     if key not in st.session_state:
         st.session_state[key] = val
 
 # ════════════════════════════════
-# PAGE 1 — LOGIN
+# PAGE 1 - LOGIN
 # ════════════════════════════════
 if not st.session_state.logged_in:
     st.write("")
@@ -380,7 +366,7 @@ if not st.session_state.logged_in:
     st.markdown("<div class='footer'>&#169; 2026 Muhammad Belal &nbsp;|&nbsp; AI University Assistant</div>", unsafe_allow_html=True)
 
 # ════════════════════════════════
-# PAGE 2 — UNIVERSITY SELECTOR
+# PAGE 2 - UNIVERSITY SELECTOR
 # ════════════════════════════════
 elif st.session_state.university is None:
     st.write("")
@@ -398,7 +384,7 @@ elif st.session_state.university is None:
         st.write("")
         if st.button("Select IUB", use_container_width=True, key="sel_iub"):
             st.session_state.university = "IUB"
-            st.session_state.messages = [{"role":"assistant","content":f"Welcome {st.session_state.full_name}! 🎓 Ask me anything about IUB — fees, admissions, exams, hostel, or library."}]
+            st.session_state.messages = [{"role": "assistant", "content": f"Welcome {st.session_state.full_name}! 🎓 Ask me anything about IUB — fees, admissions, exams, hostel, or library."}]
             st.rerun()
 
     with c2:
@@ -410,28 +396,27 @@ elif st.session_state.university is None:
         st.write("")
         if st.button("Select BZU", use_container_width=True, key="sel_bzu"):
             st.session_state.university = "BZU"
-            st.session_state.messages = [{"role":"assistant","content":f"Welcome {st.session_state.full_name}! 🎓 Ask me anything about BZU — fees, admissions, exams, hostel, or scholarships."}]
+            st.session_state.messages = [{"role": "assistant", "content": f"Welcome {st.session_state.full_name}! 🎓 Ask me anything about BZU — fees, admissions, exams, hostel, or scholarships."}]
             st.rerun()
 
     st.write("")
     st.write("")
-    _, mid, _ = st.columns([3,1,3])
+    _, mid, _ = st.columns([3, 1, 3])
     with mid:
         if st.button("Logout", key="lo_sel"):
-            for k in ["logged_in","username","full_name","messages","university"]:
-                st.session_state[k] = False if k=="logged_in" else (None if k=="university" else ("" if k!="messages" else []))
+            for k in ["logged_in", "username", "full_name", "messages", "university"]:
+                st.session_state[k] = False if k == "logged_in" else (None if k == "university" else ("" if k != "messages" else []))
             st.rerun()
 
     st.markdown("<div class='footer'>&#169; 2026 Muhammad Belal &nbsp;|&nbsp; AI University Assistant</div>", unsafe_allow_html=True)
 
 # ════════════════════════════════
-# PAGE 3 — CHATBOT
+# PAGE 3 - CHATBOT
 # ════════════════════════════════
 else:
     uni = st.session_state.university
     logo = IUB_LOGO if uni == "IUB" else BZU_LOGO
     uni_full = "Islamia University Bahawalpur" if uni == "IUB" else "Bahauddin Zakariya University"
-    uni_color = "#1a1a1a"
 
     # Header
     h1, h2, h3 = st.columns([1, 5, 2])
@@ -440,7 +425,7 @@ else:
     with h2:
         st.markdown(f"<div style='padding-top:4px;'><p style='margin:0;font-weight:600;font-size:17px;color:#1a1a1a;'>{uni} AI Assistant</p><p style='margin:0;font-size:12px;color:#8a8a8a;'>{uni_full} &mdash; {st.session_state.full_name}</p></div>", unsafe_allow_html=True)
     with h3:
-        if st.button("↩ Switch Uni", key="sw"):
+        if st.button("Switch Uni", key="sw"):
             st.session_state.university = None
             st.session_state.messages = []
             st.rerun()
@@ -453,7 +438,7 @@ else:
         hist = get_history(st.session_state.username)
         if hist:
             for i, h in enumerate(hist):
-                q = h["question"][:35]+"..." if len(h["question"])>35 else h["question"]
+                q = h["question"][:35] + "..." if len(h["question"]) > 35 else h["question"]
                 c1, c2 = st.columns([5, 1])
                 with c1:
                     st.markdown(f"<div class='hist-item'>{q}</div>", unsafe_allow_html=True)
@@ -465,22 +450,20 @@ else:
             st.markdown("<p style='color:#b4b4b4;font-size:13px;'>No history yet.</p>", unsafe_allow_html=True)
         st.markdown("<hr>", unsafe_allow_html=True)
         if st.button("Clear Chat", use_container_width=True, key="clr"):
-            st.session_state.messages = [{"role":"assistant","content":f"Chat cleared! Ask me anything about {uni}. 😊"}]
+            st.session_state.messages = [{"role": "assistant", "content": f"Chat cleared! Ask me anything about {uni}. 😊"}]
             st.rerun()
         if st.button("Logout", use_container_width=True, key="lo_chat"):
-            for k in ["logged_in","username","full_name","messages","university"]:
-                st.session_state[k] = False if k=="logged_in" else (None if k=="university" else ("" if k!="messages" else []))
+            for k in ["logged_in", "username", "full_name", "messages", "university"]:
+                st.session_state[k] = False if k == "logged_in" else (None if k == "university" else ("" if k != "messages" else []))
             st.rerun()
 
-   # Messages
+    # Messages
     for i, msg in enumerate(st.session_state.messages):
         if msg["role"] == "user":
             st.markdown(f"<div class='user-msg'><div class='user-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
         else:
             st.markdown(f"<div class='bot-msg'><div class='bot-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
-            
-            col1, col2, col3 = st.columns([1,1,10])
-            
+            col1, col2, col3 = st.columns([1, 1, 10])
             with col1:
                 if st.button("👍", key=f"like_{i}", help="Good response"):
                     chats_col.update_one(
@@ -488,7 +471,6 @@ else:
                         {"$set": {"feedback": "good"}}
                     )
                     st.toast("Thanks for feedback! 😊")
-                    
             with col2:
                 if st.button("👎", key=f"dislike_{i}", help="Bad response"):
                     chats_col.update_one(
@@ -496,10 +478,11 @@ else:
                         {"$set": {"feedback": "bad"}}
                     )
                     st.toast("Sorry! We'll improve 🙏")
-
             with col3:
                 st.empty()
-            
+
+    st.write("")
+
     # Quick buttons
     st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
     q1, q2, q3 = st.columns(3)
