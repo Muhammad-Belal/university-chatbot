@@ -58,31 +58,43 @@ def search_docs(question, uni_prefix, top_k=3):
 def get_answer(question, chunks, university):
     context = "\n\n".join([c.metadata["text"] for c in chunks])
     sources = list(set([c.metadata["source"] for c in chunks]))
+
+    # Question ke related section dhundo knowledge base mein
+    q_lower = question.lower()
+    keywords = ["attendance", "exam", "fee", "hostel", "admission", "department", 
+                "program", "scholarship", "library", "semester", "result", "campus",
+                "engineering", "medical", "computer", "science", "arts", "law"]
     
-    # University ke hisaab se knowledge base ka part lo
-    if university == "IUB":
-        extra_knowledge = UNIVERSITY_KNOWLEDGE[:4000]
-    else:
-        bzu_start = UNIVERSITY_KNOWLEDGE.find("BZU")
-        extra_knowledge = UNIVERSITY_KNOWLEDGE[bzu_start:bzu_start+4000]
+    extra_knowledge = ""
+    for kw in keywords:
+        if kw in q_lower:
+            idx = UNIVERSITY_KNOWLEDGE.lower().find(kw)
+            if idx != -1:
+                extra_knowledge = UNIVERSITY_KNOWLEDGE[max(0, idx-200):idx+3000]
+                break
+    
+    if not extra_knowledge:
+        extra_knowledge = UNIVERSITY_KNOWLEDGE[:3000]
 
     prompt = f"""You are a smart, friendly AI assistant for {university} university students.
 
 LANGUAGE RULES — follow these strictly, no mixing allowed:
 - If the question is in English only → reply in English only, no Urdu words at all
-- If the question is in Roman Urdu → reply in Roman Urdu only, no Urdu script at all
+- If the question is in Roman Urdu (Urdu words written in English letters like "kya", "hai", "fee") → reply in Roman Urdu only, no Urdu script at all
 - If the question is in Urdu script → reply in Urdu script only
-- Never mix languages
+- Never mix languages. Never add notes like "(Note: this answer is in Roman Urdu)"
+- Never mention which language you are replying in
 
 ANSWER RULES:
-- First check Documents, then check Additional Knowledge
-- Use whichever has better information
+- First check Documents below, then check Knowledge Base
+- Use whichever source has better and more detailed information
+- Never say "visit the website" or "I don't have info" if any source has something related
 - Be helpful, friendly and conversational
 
-Documents:
+Documents (from vector search):
 {context}
 
-Additional Knowledge:
+Knowledge Base:
 {extra_knowledge}
 
 Question: {question}
@@ -94,13 +106,6 @@ Answer:"""
         max_tokens=500
     )
     return res.choices[0].message.content, sources
-
-def chat(question, university):
-    prefix = "iub" if university == "IUB" else "bzu"
-    chunks = search_docs(question, prefix)
-    if not chunks:
-        return "Sorry, no relevant info found.", []
-    return get_answer(question, chunks, university)
 
 # ── Page config ──
 st.set_page_config(page_title="University AI Assistant", page_icon="🎓", layout="centered")
