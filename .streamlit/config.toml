@@ -4,13 +4,3 @@ backgroundColor="#ffffff"
 primaryColor="#1a1a1a"
 secondaryBackgroundColor="#f9f9f9"
 textColor="#1a1a1a"
-
-[theme]
-base="light"
-backgroundColor="#ffffff"
-primaryColor="#1a1a1a"
-secondaryBackgroundColor="#f9f9f9"
-textColor="#1a1a1a"
-
-[client]
-showSidebarNavigation = true
