@@ -475,26 +475,13 @@ else:
     st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
     q1, q2, q3 = st.columns(3)
     with q1:
-        if st.button("Attendance Policy", use_container_width=True, key="qq1"):
+        if st.button("Attendance Policy", use_container_width=True, key="qq_att"):
             st.session_state.pending = f"What is the attendance policy at {uni}?"
     with q2:
-        if st.button("Exam Rules", use_container_width=True, key="qq2"):
+        if st.button("Exam Rules", use_container_width=True, key="qq_exam"):
             st.session_state.pending = f"What are the exam rules at {uni}?"
     with q3:
-        if st.button("Fee Structure", use_container_width=True, key="qq3"):
-            st.session_state.pending = f"What is the fee structure at {uni}?"
-    
-    # Quick buttons
-    st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
-    q1, q2, q3 = st.columns(3)
-    with q1:
-        if st.button("Attendance Policy", use_container_width=True, key="qq1"):
-            st.session_state.pending = f"What is the attendance policy at {uni}?"
-    with q2:
-        if st.button("Exam Rules", use_container_width=True, key="qq2"):
-            st.session_state.pending = f"What are the exam rules at {uni}?"
-    with q3:
-        if st.button("Fee Structure", use_container_width=True, key="qq3"):
+        if st.button("Fee Structure", use_container_width=True, key="qq_fee"):
             st.session_state.pending = f"What is the fee structure at {uni}?"
 
     # Input
