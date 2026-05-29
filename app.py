@@ -1,5 +1,6 @@
 import streamlit as st
 from groq import Groq
+from knowledge_base import chat
 from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
 from pymongo import MongoClient
