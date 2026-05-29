@@ -480,51 +480,26 @@ else:
         else:
             st.markdown(f"<div class='bot-msg'><div class='bot-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
             
-            col1, col2, col3, col4, col5 = st.columns([1,1,1,1,8])
+            col1, col2, col3 = st.columns([1,1,10])
             
             with col1:
-                if st.button("⎘", key=f"copy_{i}", help="Copy"):
-                    st.session_state[f"copied_{i}"] = msg['content']
-                    st.toast("✓ Copied!")
-                    
-            with col2:
-                liked = st.session_state.get(f"liked_{i}", False)
-                if st.button("👍" if not liked else "👍", key=f"like_{i}", help="Good response"):
-                    st.session_state[f"liked_{i}"] = True
-                    st.session_state[f"disliked_{i}"] = False
+                if st.button("👍", key=f"like_{i}", help="Good response"):
                     chats_col.update_one(
                         {"username": st.session_state.username, "answer": msg['content']},
                         {"$set": {"feedback": "good"}}
                     )
                     st.toast("Thanks for feedback! 😊")
                     
-            with col3:
-                disliked = st.session_state.get(f"disliked_{i}", False)
+            with col2:
                 if st.button("👎", key=f"dislike_{i}", help="Bad response"):
-                    st.session_state[f"disliked_{i}"] = True
-                    st.session_state[f"liked_{i}"] = False
                     chats_col.update_one(
                         {"username": st.session_state.username, "answer": msg['content']},
                         {"$set": {"feedback": "bad"}}
                     )
                     st.toast("Sorry! We'll improve 🙏")
-                    
-            with col4:
-                if st.button("↻", key=f"retry_{i}", help="Retry"):
-                    if i > 0:
-                        last_q = st.session_state.messages[i-1]['content']
-                        st.session_state.pending = last_q
-                        st.rerun()
 
-            # Copy content store
-            if st.session_state.get(f"copied_{i}"):
-                st.markdown(f"""
-                <textarea id="copy_area_{i}" style="position:absolute;left:-9999px;">{st.session_state[f'copied_{i}']}</textarea>
-                <script>
-                var t = document.getElementById('copy_area_{i}');
-                t.select(); document.execCommand('copy');
-                </script>
-                """, unsafe_allow_html=True)
+            with col3:
+                st.empty()
             
     # Quick buttons
     st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
