@@ -379,8 +379,13 @@ if not st.session_state.logged_in:
 # ════════════════════════════════
 elif st.session_state.university is None:
     st.write("")
-    st.markdown(f"<h3 style='text-align:center;font-weight:600;color:#1a1a1a;'>Welcome, {st.session_state.full_name}! 👋</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;color:#8a8a8a;font-size:14px;margin:0 auto;width:100%;display:block;'>Choose your university to get started</p>", unsafe_allow_html=True)
+    st.markdown(f"""
+<div style='text-align:center;width:100%;'>
+    <h3 style='font-weight:600;color:#1a1a1a;margin-bottom:4px;'>Welcome, {st.session_state.full_name}! 👋</h3>
+    <p style='color:#8a8a8a;font-size:14px;margin:0;'>Choose your university to get started</p>
+</div>
+""", unsafe_allow_html=True)
+    
     st.write("")
     st.write("")
 
