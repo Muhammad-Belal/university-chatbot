@@ -332,7 +332,7 @@ for key, val in {"logged_in": False, "username": "", "full_name": "", "messages"
 if not st.session_state.logged_in:
     st.write("")
     st.markdown("<h2 style='text-align:center;font-weight:600;font-size:26px;color:#1a1a1a;'>🎓 University AI Assistant</h2>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;color:#8a8a8a;font-size:14px;margin:0 auto;width:100%;display:block;'>Choose your university to get started</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;color:#8a8a8a;font-size:14px;margin-bottom:24px;'>Your Smart University Guide</p>", unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(["Login", "Register"])
 
@@ -380,7 +380,7 @@ if not st.session_state.logged_in:
 elif st.session_state.university is None:
     st.write("")
     st.markdown(f"<h3 style='text-align:center;font-weight:600;color:#1a1a1a;'>Welcome, {st.session_state.full_name}! 👋</h3>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align:center;color:#8a8a8a;font-size:14px;'>Choose your university to get started</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;color:#8a8a8a;font-size:14px;margin:0 auto;width:100%;display:block;'>Choose your university to get started</p>", unsafe_allow_html=True)
     st.write("")
     st.write("")
 
