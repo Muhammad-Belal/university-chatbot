@@ -479,31 +479,45 @@ else:
             st.markdown(f"<div class='user-msg'><div class='user-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
         else:
             st.markdown(f"<div class='bot-msg'><div class='bot-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
-            st.markdown("""
+            st.markdown(f"""
             <div style='display:flex;gap:2px;margin:-8px 0 8px 4px;'>
-                <button title="Copy" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
+                <button title="Copy" onclick="navigator.clipboard.writeText(document.querySelectorAll('.bot-bubble')[{i}].innerText);this.style.color='#1a1a1a'" 
+                    style='background:none;border:none;cursor:pointer;color:#c8c8c8;padding:4px 6px;border-radius:6px;transition:all 0.2s;'
+                    onmouseover="this.style.color='#1a1a1a';this.style.background='#f0f0f0'" 
+                    onmouseout="this.style.color='#c8c8c8';this.style.background='none'">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <button title="Good response" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
+                <button title="Good response"
+                    style='background:none;border:none;cursor:pointer;color:#c8c8c8;padding:4px 6px;border-radius:6px;transition:all 0.2s;'
+                    onmouseover="this.style.color='#1a1a1a';this.style.background='#f0f0f0'" 
+                    onmouseout="this.style.color='#c8c8c8';this.style.background='none'"
+                    onclick="this.style.color='#16a34a';this.style.background='#f0fdf4'">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
                     </svg>
                 </button>
-                <button title="Bad response" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
+                <button title="Bad response"
+                    style='background:none;border:none;cursor:pointer;color:#c8c8c8;padding:4px 6px;border-radius:6px;transition:all 0.2s;'
+                    onmouseover="this.style.color='#1a1a1a';this.style.background='#f0f0f0'" 
+                    onmouseout="this.style.color='#c8c8c8';this.style.background='none'"
+                    onclick="this.style.color='#dc2626';this.style.background='#fef2f2'">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
                     </svg>
                 </button>
-                <button title="Retry" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
+                <button title="Retry"
+                    style='background:none;border:none;cursor:pointer;color:#c8c8c8;padding:4px 6px;border-radius:6px;transition:all 0.2s;'
+                    onmouseover="this.style.color='#1a1a1a';this.style.background='#f0f0f0'" 
+                    onmouseout="this.style.color='#c8c8c8';this.style.background='none'">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
                     </svg>
                 </button>
             </div>
             """, unsafe_allow_html=True)
-    st.write("")
+            
     # Quick buttons
     st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
     q1, q2, q3 = st.columns(3)
