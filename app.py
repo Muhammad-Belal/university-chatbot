@@ -446,25 +446,24 @@ else:
             st.markdown(f"<div class='user-msg'><div class='user-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
         else:
             st.markdown(f"<div class='bot-msg'><div class='bot-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
-            st.markdown(f"""
+            st.markdown("""
             <div style='display:flex;gap:2px;margin:-8px 0 8px 4px;'>
-                <button onclick="navigator.clipboard.writeText(`{msg['content']}`)" 
-                    title="Copy" style='background:none;border:none;cursor:pointer;color:#b4b4b4;font-size:14px;padding:4px 6px;border-radius:6px;'>
+                <button title="Copy" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                     </svg>
                 </button>
-                <button title="Good response" style='background:none;border:none;cursor:pointer;color:#b4b4b4;font-size:14px;padding:4px 6px;border-radius:6px;'>
+                <button title="Good response" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3H14z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
                     </svg>
                 </button>
-                <button title="Bad response" style='background:none;border:none;cursor:pointer;color:#b4b4b4;font-size:14px;padding:4px 6px;border-radius:6px;'>
+                <button title="Bad response" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3H10z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/>
                     </svg>
                 </button>
-                <button title="Retry" style='background:none;border:none;cursor:pointer;color:#b4b4b4;font-size:14px;padding:4px 6px;border-radius:6px;'>
+                <button title="Retry" style='background:none;border:none;cursor:pointer;color:#b4b4b4;padding:4px 6px;border-radius:6px;'>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
                     </svg>
@@ -472,6 +471,18 @@ else:
             </div>
             """, unsafe_allow_html=True)
     st.write("")
+    # Quick buttons
+    st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
+    q1, q2, q3 = st.columns(3)
+    with q1:
+        if st.button("Attendance Policy", use_container_width=True, key="qq1"):
+            st.session_state.pending = f"What is the attendance policy at {uni}?"
+    with q2:
+        if st.button("Exam Rules", use_container_width=True, key="qq2"):
+            st.session_state.pending = f"What are the exam rules at {uni}?"
+    with q3:
+        if st.button("Fee Structure", use_container_width=True, key="qq3"):
+            st.session_state.pending = f"What is the fee structure at {uni}?"
     
     # Quick buttons
     st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
