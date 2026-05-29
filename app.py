@@ -1,6 +1,5 @@
 import streamlit as st
 from groq import Groq
-from knowledge_base import chat
 from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
 from pymongo import MongoClient
@@ -503,7 +502,6 @@ else:
     if to_process:
         st.session_state.messages.append({"role":"user","content":to_process})
         with st.spinner(""):
-            ans, srcs = chat(to_process, uni)
         uni_kw = ["fee","admission","hostel","exam","library","attendance","scholarship","department","iub","bzu","university","policy","semester","result"]
         is_uni_q = any(w in to_process.lower() for w in uni_kw)
         full_ans = ans
