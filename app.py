@@ -128,9 +128,9 @@ Answer:"""
     return res.choices[0].message.content, sources
 
 # -- Page config --
-st.set_page_config(page_title="University AI Assistant", page_icon="🎓", layout="centered")
+st.set_page_config(page_title="University AI Assistant", page_icon="🎓", layout="wide")
 
-# -- CSS with movable sidebar --
+# -- Custom CSS with Working Sidebar Toggle --
 st.markdown("""
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
@@ -146,78 +146,74 @@ html, body, [class*="css"], .stApp {
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton { display: none; }
 
-/* Sidebar styles - movable */
-[data-testid="stSidebar"] {
-    min-width: 280px !important;
-    width: 280px !important;
-    background-color: #f9f9f9 !important;
-    border-right: 1px solid #e5e5e5 !important;
-    transition: transform 0.3s ease-in-out !important;
-    z-index: 999 !important;
+/* Custom Sidebar Toggle Button */
+.custom-toggle-btn {
+    position: fixed;
+    left: 15px;
+    top: 70px;
+    z-index: 1000;
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: all 0.3s;
 }
 
-/* When sidebar is collapsed */
-[data-testid="stSidebar"][aria-expanded="false"] {
-    transform: translateX(-100%) !important;
+.custom-toggle-btn:hover {
+    background: #333;
 }
 
-/* When sidebar is expanded */
-[data-testid="stSidebar"][aria-expanded="true"] {
-    transform: translateX(0) !important;
+/* Custom Sidebar */
+.custom-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #f9f9f9;
+    border-right: 1px solid #e5e5e5;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+    overflow-y: auto;
+    padding: 70px 15px 20px 15px;
 }
 
-/* Sidebar toggle button */
-[data-testid="stSidebarCollapsedControl"] {
-    display: block !important;
-    visibility: visible !important;
-    background-color: #ffffff !important;
-    border: 1px solid #e5e5e5 !important;
-    border-radius: 8px !important;
-    cursor: pointer !important;
-    position: fixed !important;
-    left: 10px !important;
-    top: 70px !important;
-    z-index: 1000 !important;
-    padding: 8px 12px !important;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
-    font-size: 18px !important;
+.custom-sidebar.open {
+    transform: translateX(0);
 }
 
-[data-testid="stSidebarCollapsedControl"]:hover {
-    background-color: #f0f0f0 !important;
+/* Overlay */
+.custom-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 998;
 }
 
-/* Mobile responsive */
-@media screen and (max-width: 768px) {
-    [data-testid="stSidebar"] {
-        position: fixed !important;
-        height: 100vh !important;
-        top: 0 !important;
-        left: 0 !important;
-        box-shadow: 2px 0 12px rgba(0,0,0,0.15) !important;
-    }
-    
-    [data-testid="stSidebarCollapsedControl"] {
-        left: 10px !important;
-        top: 70px !important;
-        padding: 8px 12px !important;
-    }
-    
-    .main .block-container {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-    }
+.custom-overlay.show {
+    display: block;
 }
 
-/* Desktop styles */
-@media screen and (min-width: 769px) {
-    [data-testid="stSidebarCollapsedControl"] {
-        left: 15px !important;
-        top: 80px !important;
-    }
+/* Main content adjustment */
+.main .block-container {
+    padding-top: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-[data-testid="stSidebar"] * {
+/* Sidebar content styles */
+.custom-sidebar * {
     color: #1a1a1a !important;
 }
 
@@ -382,23 +378,40 @@ hr {
 }
 
 .stSpinner > div { border-top-color: #1a1a1a !important; }
+
+@media screen and (max-width: 768px) {
+    .custom-toggle-btn {
+        left: 10px;
+        top: 70px;
+        padding: 6px 12px;
+        font-size: 18px;
+    }
+    .custom-sidebar {
+        width: 260px;
+    }
+}
 </style>
 
 <script>
-// JavaScript to handle sidebar toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const toggleBtn = parent.document.querySelector('[data-testid="stSidebarCollapsedControl"]');
-    const sidebar = parent.document.querySelector('[data-testid="stSidebar"]');
-    
-    if (toggleBtn && sidebar) {
-        toggleBtn.addEventListener('click', function() {
-            const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
-            sidebar.setAttribute('aria-expanded', !isExpanded);
-        });
-    }
-});
+function toggleCustomSidebar() {
+    const sidebar = parent.document.querySelector('.custom-sidebar');
+    const overlay = parent.document.querySelector('.custom-overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+}
+
+function closeCustomSidebar() {
+    const sidebar = parent.document.querySelector('.custom-sidebar');
+    const overlay = parent.document.querySelector('.custom-overlay');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+}
 </script>
 """, unsafe_allow_html=True)
+
+# -- Custom Sidebar Toggle Button --
+st.markdown('<button class="custom-toggle-btn" onclick="toggleCustomSidebar()">☰</button>', unsafe_allow_html=True)
+st.markdown('<div class="custom-overlay" onclick="closeCustomSidebar()"></div>', unsafe_allow_html=True)
 
 # -- Session state init --
 for key, val in {"logged_in": False, "username": "", "full_name": "", "messages": [], "university": None}.items():
@@ -524,37 +537,55 @@ else:
     
     st.markdown("<hr>", unsafe_allow_html=True)
     
-    # Sidebar with recent chats
-    with st.sidebar:
-        st.markdown(f"<img src='{logo}' style='width:72px;height:72px;object-fit:contain;border-radius:8px;display:block;margin:0 auto 12px;mix-blend-mode:multiply;'>", unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:600;font-size:13px;color:#4b4b4b;margin-bottom:8px;'>📋 Recent Chats</p>", unsafe_allow_html=True)
-        
-        hist = get_history(st.session_state.username)
-        if hist:
-            for i, h in enumerate(hist):
-                q = h["question"][:35] + "..." if len(h["question"]) > 35 else h["question"]
-                c1, c2 = st.columns([5, 1])
-                with c1:
-                    st.markdown(f"<div class='hist-item'>{q}</div>", unsafe_allow_html=True)
-                with c2:
-                    if st.button("🗑️", key=f"del_{i}", help="Delete"):
-                        chats_col.delete_one({"_id": h["_id"]})
-                        st.rerun()
-        else:
-            st.markdown("<p style='color:#b4b4b4;font-size:13px;'>No chat history yet.</p>", unsafe_allow_html=True)
-        
-        st.markdown("<hr>", unsafe_allow_html=True)
-        
-        if st.button("🗑️ Clear Chat", use_container_width=True, key="clr"):
-            st.session_state.messages = [{"role": "assistant", "content": f"Chat cleared! Ask me anything about {uni}. 😊"}]
-            st.rerun()
-        
-        if st.button("🚪 Logout", use_container_width=True, key="lo_chat"):
-            for k in ["logged_in", "username", "full_name", "messages", "university"]:
-                st.session_state[k] = False if k == "logged_in" else (None if k == "university" else ("" if k != "messages" else []))
-            st.rerun()
+    # Custom Sidebar Content (will be shown when toggled)
+    sidebar_html = f"""
+    <div class="custom-sidebar" id="customSidebar">
+        <div style="text-align:center; margin-bottom:20px;">
+            <img src='{logo}' style='width:60px;height:60px;object-fit:contain;border-radius:8px;mix-blend-mode:multiply;'>
+            <p style='margin-top:10px;font-weight:600;'>{st.session_state.full_name}</p>
+        </div>
+    """
+    st.markdown(sidebar_html, unsafe_allow_html=True)
     
-    # Display messages
+    # Sidebar content using Streamlit components
+    with st.sidebar:
+        # This creates an empty sidebar - our custom sidebar will be populated via markdown
+        pass
+    
+    # Add content to custom sidebar
+    st.markdown('<div class="custom-sidebar-content">', unsafe_allow_html=True)
+    
+    # Display recent chats in custom sidebar
+    st.markdown("<p style='font-weight:600;font-size:13px;color:#4b4b4b;margin-bottom:8px;'>Recent Chats</p>", unsafe_allow_html=True)
+    
+    hist = get_history(st.session_state.username)
+    if hist:
+        for i, h in enumerate(hist):
+            q = h["question"][:35] + "..." if len(h["question"]) > 35 else h["question"]
+            c1, c2 = st.columns([5, 1])
+            with c1:
+                st.markdown(f"<div class='hist-item'>{q}</div>", unsafe_allow_html=True)
+            with c2:
+                if st.button("🗑️", key=f"del_{i}", help="Delete"):
+                    chats_col.delete_one({"_id": h["_id"]})
+                    st.rerun()
+    else:
+        st.markdown("<p style='color:#b4b4b4;font-size:13px;'>No history yet.</p>", unsafe_allow_html=True)
+    
+    st.markdown("<hr>", unsafe_allow_html=True)
+    
+    if st.button("Clear Chat", use_container_width=True, key="clr"):
+        st.session_state.messages = [{"role": "assistant", "content": f"Chat cleared! Ask me anything about {uni}. 😊"}]
+        st.rerun()
+    
+    if st.button("Logout", use_container_width=True, key="lo_chat"):
+        for k in ["logged_in", "username", "full_name", "messages", "university"]:
+            st.session_state[k] = False if k == "logged_in" else (None if k == "university" else ("" if k != "messages" else []))
+        st.rerun()
+    
+    st.markdown('</div></div>', unsafe_allow_html=True)
+    
+    # Messages display
     for i, msg in enumerate(st.session_state.messages):
         if msg["role"] == "user":
             st.markdown(f"<div class='user-msg'><div class='user-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
@@ -583,20 +614,20 @@ else:
     st.write("")
     
     # Quick buttons
-    st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>⚡ Quick Questions</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
     q1, q2, q3 = st.columns(3)
     with q1:
-        if st.button("📋 Attendance Policy", use_container_width=True, key="qq_att"):
+        if st.button("Attendance Policy", use_container_width=True, key="qq_att"):
             st.session_state.pending = f"What is the attendance policy at {uni}?"
     with q2:
-        if st.button("📝 Exam Rules", use_container_width=True, key="qq_exam"):
+        if st.button("Exam Rules", use_container_width=True, key="qq_exam"):
             st.session_state.pending = f"What are the exam rules at {uni}?"
     with q3:
-        if st.button("💰 Fee Structure", use_container_width=True, key="qq_fee"):
+        if st.button("Fee Structure", use_container_width=True, key="qq_fee"):
             st.session_state.pending = f"What is the fee structure at {uni}?"
     
     # Chat input
-    user_input = st.chat_input("💬 Message University AI Assistant...")
+    user_input = st.chat_input("Message University AI Assistant...")
     to_process = None
     
     if user_input:
@@ -607,7 +638,7 @@ else:
     
     if to_process:
         st.session_state.messages.append({"role": "user", "content": to_process})
-        with st.spinner("🤔 Thinking..."):
+        with st.spinner("Thinking..."):
             prefix = "iub" if uni == "IUB" else "bzu"
             docs = search_docs(to_process, prefix)
             ans, srcs = get_answer(to_process, docs, uni)
