@@ -130,7 +130,7 @@ Answer:"""
 # -- Page config --
 st.set_page_config(page_title="University AI Assistant", page_icon="🎓", layout="centered")
 
-# -- CSS --
+# -- CSS with movable sidebar --
 st.markdown("""
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
@@ -146,14 +146,27 @@ html, body, [class*="css"], .stApp {
 #MainMenu, footer, header { visibility: hidden; }
 .stDeployButton { display: none; }
 
-/* Sidebar fixes - makes sidebar visible and wider */
+/* Sidebar styles - movable */
 [data-testid="stSidebar"] {
     min-width: 280px !important;
     width: 280px !important;
     background-color: #f9f9f9 !important;
     border-right: 1px solid #e5e5e5 !important;
+    transition: transform 0.3s ease-in-out !important;
+    z-index: 999 !important;
 }
 
+/* When sidebar is collapsed */
+[data-testid="stSidebar"][aria-expanded="false"] {
+    transform: translateX(-100%) !important;
+}
+
+/* When sidebar is expanded */
+[data-testid="stSidebar"][aria-expanded="true"] {
+    transform: translateX(0) !important;
+}
+
+/* Sidebar toggle button */
 [data-testid="stSidebarCollapsedControl"] {
     display: block !important;
     visibility: visible !important;
@@ -161,12 +174,47 @@ html, body, [class*="css"], .stApp {
     border: 1px solid #e5e5e5 !important;
     border-radius: 8px !important;
     cursor: pointer !important;
+    position: fixed !important;
+    left: 10px !important;
+    top: 70px !important;
+    z-index: 1000 !important;
+    padding: 8px 12px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+    font-size: 18px !important;
 }
 
-[data-testid="stSidebar"][aria-expanded="false"] {
-    transform: translateX(0px) !important;
-    visibility: visible !important;
-    margin-left: 0px !important;
+[data-testid="stSidebarCollapsedControl"]:hover {
+    background-color: #f0f0f0 !important;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+    [data-testid="stSidebar"] {
+        position: fixed !important;
+        height: 100vh !important;
+        top: 0 !important;
+        left: 0 !important;
+        box-shadow: 2px 0 12px rgba(0,0,0,0.15) !important;
+    }
+    
+    [data-testid="stSidebarCollapsedControl"] {
+        left: 10px !important;
+        top: 70px !important;
+        padding: 8px 12px !important;
+    }
+    
+    .main .block-container {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+}
+
+/* Desktop styles */
+@media screen and (min-width: 769px) {
+    [data-testid="stSidebarCollapsedControl"] {
+        left: 15px !important;
+        top: 80px !important;
+    }
 }
 
 [data-testid="stSidebar"] * {
@@ -335,6 +383,21 @@ hr {
 
 .stSpinner > div { border-top-color: #1a1a1a !important; }
 </style>
+
+<script>
+// JavaScript to handle sidebar toggle
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleBtn = parent.document.querySelector('[data-testid="stSidebarCollapsedControl"]');
+    const sidebar = parent.document.querySelector('[data-testid="stSidebar"]');
+    
+    if (toggleBtn && sidebar) {
+        toggleBtn.addEventListener('click', function() {
+            const isExpanded = sidebar.getAttribute('aria-expanded') === 'true';
+            sidebar.setAttribute('aria-expanded', !isExpanded);
+        });
+    }
+});
+</script>
 """, unsafe_allow_html=True)
 
 # -- Session state init --
@@ -461,10 +524,10 @@ else:
     
     st.markdown("<hr>", unsafe_allow_html=True)
     
-    # Sidebar
+    # Sidebar with recent chats
     with st.sidebar:
         st.markdown(f"<img src='{logo}' style='width:72px;height:72px;object-fit:contain;border-radius:8px;display:block;margin:0 auto 12px;mix-blend-mode:multiply;'>", unsafe_allow_html=True)
-        st.markdown("<p style='font-weight:600;font-size:13px;color:#4b4b4b;margin-bottom:8px;'>Recent Chats</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-weight:600;font-size:13px;color:#4b4b4b;margin-bottom:8px;'>📋 Recent Chats</p>", unsafe_allow_html=True)
         
         hist = get_history(st.session_state.username)
         if hist:
@@ -478,20 +541,20 @@ else:
                         chats_col.delete_one({"_id": h["_id"]})
                         st.rerun()
         else:
-            st.markdown("<p style='color:#b4b4b4;font-size:13px;'>No history yet.</p>", unsafe_allow_html=True)
+            st.markdown("<p style='color:#b4b4b4;font-size:13px;'>No chat history yet.</p>", unsafe_allow_html=True)
         
         st.markdown("<hr>", unsafe_allow_html=True)
         
-        if st.button("Clear Chat", use_container_width=True, key="clr"):
+        if st.button("🗑️ Clear Chat", use_container_width=True, key="clr"):
             st.session_state.messages = [{"role": "assistant", "content": f"Chat cleared! Ask me anything about {uni}. 😊"}]
             st.rerun()
         
-        if st.button("Logout", use_container_width=True, key="lo_chat"):
+        if st.button("🚪 Logout", use_container_width=True, key="lo_chat"):
             for k in ["logged_in", "username", "full_name", "messages", "university"]:
                 st.session_state[k] = False if k == "logged_in" else (None if k == "university" else ("" if k != "messages" else []))
             st.rerun()
     
-    # Messages
+    # Display messages
     for i, msg in enumerate(st.session_state.messages):
         if msg["role"] == "user":
             st.markdown(f"<div class='user-msg'><div class='user-bubble'>{msg['content']}</div></div>", unsafe_allow_html=True)
@@ -520,20 +583,20 @@ else:
     st.write("")
     
     # Quick buttons
-    st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>Quick Questions</p>", unsafe_allow_html=True)
+    st.markdown("<p style='font-size:12px;color:#8a8a8a;font-weight:500;margin-bottom:6px;'>⚡ Quick Questions</p>", unsafe_allow_html=True)
     q1, q2, q3 = st.columns(3)
     with q1:
-        if st.button("Attendance Policy", use_container_width=True, key="qq_att"):
+        if st.button("📋 Attendance Policy", use_container_width=True, key="qq_att"):
             st.session_state.pending = f"What is the attendance policy at {uni}?"
     with q2:
-        if st.button("Exam Rules", use_container_width=True, key="qq_exam"):
+        if st.button("📝 Exam Rules", use_container_width=True, key="qq_exam"):
             st.session_state.pending = f"What are the exam rules at {uni}?"
     with q3:
-        if st.button("Fee Structure", use_container_width=True, key="qq_fee"):
+        if st.button("💰 Fee Structure", use_container_width=True, key="qq_fee"):
             st.session_state.pending = f"What is the fee structure at {uni}?"
     
-    # Input
-    user_input = st.chat_input("Message University AI Assistant...")
+    # Chat input
+    user_input = st.chat_input("💬 Message University AI Assistant...")
     to_process = None
     
     if user_input:
@@ -544,7 +607,7 @@ else:
     
     if to_process:
         st.session_state.messages.append({"role": "user", "content": to_process})
-        with st.spinner("Thinking..."):
+        with st.spinner("🤔 Thinking..."):
             prefix = "iub" if uni == "IUB" else "bzu"
             docs = search_docs(to_process, prefix)
             ans, srcs = get_answer(to_process, docs, uni)
