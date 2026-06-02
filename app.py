@@ -308,11 +308,14 @@ elif st.session_state.university is None:
 
     with col1:
         with st.container(border=True):
-            # ── Logo centered above title ──
-            logo_col = st.columns([1, 2, 1])
-            with logo_col[1]:
-                st.image(IUB_LOGO, width=64)
-            st.markdown("<div style='text-align:center;'><strong style='font-size:15px;'>Islamia University Bahawalpur</strong><br><span style='color:gray;font-size:12px;'>IUB — Est. 1925, Bahawalpur</span></div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='text-align:center;padding:12px 0 8px 0;'>"
+                f"<img src='{IUB_LOGO}' style='width:70px;height:70px;object-fit:contain;display:block;margin:0 auto 10px auto;'/>"
+                f"<strong style='font-size:15px;'>Islamia University Bahawalpur</strong><br>"
+                f"<span style='color:gray;font-size:12px;'>IUB — Est. 1925, Bahawalpur</span>"
+                f"</div>",
+                unsafe_allow_html=True
+            )
             st.write("")
             if st.button("Select IUB", use_container_width=True, type="primary", key="iub"):
                 st.session_state.university = "IUB"
@@ -321,11 +324,14 @@ elif st.session_state.university is None:
 
     with col2:
         with st.container(border=True):
-            # ── Logo centered above title ──
-            logo_col = st.columns([1, 2, 1])
-            with logo_col[1]:
-                st.image(BZU_LOGO, width=64)
-            st.markdown("<div style='text-align:center;'><strong style='font-size:15px;'>Bahauddin Zakariya University</strong><br><span style='color:gray;font-size:12px;'>BZU — Est. 1975, Multan</span></div>", unsafe_allow_html=True)
+            st.markdown(
+                f"<div style='text-align:center;padding:12px 0 8px 0;'>"
+                f"<img src='{BZU_LOGO}' style='width:70px;height:70px;object-fit:contain;display:block;margin:0 auto 10px auto;'/>"
+                f"<strong style='font-size:15px;'>Bahauddin Zakariya University</strong><br>"
+                f"<span style='color:gray;font-size:12px;'>BZU — Est. 1975, Multan</span>"
+                f"</div>",
+                unsafe_allow_html=True
+            )
             st.write("")
             if st.button("Select BZU", use_container_width=True, type="primary", key="bzu"):
                 st.session_state.university = "BZU"
