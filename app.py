@@ -114,7 +114,7 @@ Answer:"""
 # -- Page config --
 st.set_page_config(page_title="University AI Assistant", page_icon="🎓", layout="wide")
 
-# -- Minimal CSS: fix layout only --
+# -- CSS --
 st.markdown("""
 <style>
 #MainMenu, footer, header { display: none !important; }
@@ -144,37 +144,82 @@ st.markdown("""
     background: #3d3d3d !important;
 }
 
-/* Main area max width so chat doesn't stretch full screen */
+/* ── CHAT PAGE: narrower container ── */
 .main .block-container {
-    max-width: 750px !important;
-    padding-left: 2rem !important;
-    padding-right: 2rem !important;
+    max-width: 680px !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    padding-top: 1rem !important;
 }
 
-/* Chat messages */
+/* ── UNIVERSITY SELECT PAGE: slightly wider ── */
+.uni-select-container .block-container {
+    max-width: 860px !important;
+}
+
+/* Chat messages — slightly smaller font & padding */
 .user-msg {
     background: #1e1e1e;
     color: white;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 16px 16px 4px 16px;
-    margin: 6px 0 6px auto;
-    max-width: 65%;
+    margin: 5px 0 5px auto;
+    max-width: 60%;
     width: fit-content;
-    font-size: 14px;
+    font-size: 13px;
     word-wrap: break-word;
 }
 .bot-msg {
     background: #f0f0f0;
     color: #1e1e1e;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 16px 16px 16px 4px;
-    margin: 6px auto 6px 0;
-    max-width: 75%;
+    margin: 5px auto 5px 0;
+    max-width: 70%;
     width: fit-content;
-    font-size: 14px;
+    font-size: 13px;
     word-wrap: break-word;
-    line-height: 1.6;
+    line-height: 1.55;
 }
+
+/* Chat header — logo + text properly aligned */
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0 6px 0;
+}
+.chat-header img {
+    width: 38px !important;
+    height: 38px !important;
+    object-fit: contain;
+    border-radius: 6px;
+}
+.chat-header-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e1e1e;
+    line-height: 1.3;
+}
+.chat-header-sub {
+    font-size: 12px;
+    color: #888;
+}
+
+/* University card logo — centered, fixed size */
+.uni-card-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    margin-bottom: 8px;
+}
+.uni-card-logo img {
+    max-height: 70px !important;
+    max-width: 70px !important;
+    object-fit: contain;
+}
+
 .hist-item {
     background: #2d2d2d;
     color: #cccccc !important;
@@ -255,7 +300,7 @@ elif st.session_state.university is None:
             logout()
             st.rerun()
 
-    st.markdown(f"<h3 style='text-align:center;'>Welcome, {st.session_state.full_name}! 👋</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align:center;margin-top:1rem;'>Welcome, {st.session_state.full_name}! 👋</h3>", unsafe_allow_html=True)
     st.markdown("<p style='text-align:center;color:gray;'>Select your university</p>", unsafe_allow_html=True)
     st.write("")
 
@@ -263,9 +308,12 @@ elif st.session_state.university is None:
 
     with col1:
         with st.container(border=True):
-            st.image(IUB_LOGO, width=70)
-            st.markdown("#### Islamia University Bahawalpur")
-            st.caption("IUB — Est. 1925, Bahawalpur")
+            # ── Logo centered above title ──
+            logo_col = st.columns([1, 2, 1])
+            with logo_col[1]:
+                st.image(IUB_LOGO, width=64)
+            st.markdown("<div style='text-align:center;'><strong style='font-size:15px;'>Islamia University Bahawalpur</strong><br><span style='color:gray;font-size:12px;'>IUB — Est. 1925, Bahawalpur</span></div>", unsafe_allow_html=True)
+            st.write("")
             if st.button("Select IUB", use_container_width=True, type="primary", key="iub"):
                 st.session_state.university = "IUB"
                 st.session_state.messages = [{"role": "assistant", "content": f"Welcome {st.session_state.full_name}! 🎓 Ask me anything about IUB."}]
@@ -273,9 +321,12 @@ elif st.session_state.university is None:
 
     with col2:
         with st.container(border=True):
-            st.image(BZU_LOGO, width=70)
-            st.markdown("#### Bahauddin Zakariya University")
-            st.caption("BZU — Est. 1975, Multan")
+            # ── Logo centered above title ──
+            logo_col = st.columns([1, 2, 1])
+            with logo_col[1]:
+                st.image(BZU_LOGO, width=64)
+            st.markdown("<div style='text-align:center;'><strong style='font-size:15px;'>Bahauddin Zakariya University</strong><br><span style='color:gray;font-size:12px;'>BZU — Est. 1975, Multan</span></div>", unsafe_allow_html=True)
+            st.write("")
             if st.button("Select BZU", use_container_width=True, type="primary", key="bzu"):
                 st.session_state.university = "BZU"
                 st.session_state.messages = [{"role": "assistant", "content": f"Welcome {st.session_state.full_name}! 🎓 Ask me anything about BZU."}]
@@ -291,9 +342,12 @@ else:
 
     # ── SIDEBAR ──
     with st.sidebar:
-        st.image(logo, width=55)
-        st.markdown(f"**{st.session_state.full_name}**")
-        st.caption(f"{uni} Assistant")
+        # Logo + name together in sidebar — properly aligned
+        s1, s2 = st.columns([1, 3])
+        with s1:
+            st.image(logo, width=38)
+        with s2:
+            st.markdown(f"<div style='padding-top:4px;'><strong style='font-size:13px;'>{st.session_state.full_name}</strong><br><span style='color:#aaa;font-size:11px;'>{uni} Assistant</span></div>", unsafe_allow_html=True)
         st.markdown("---")
 
         st.markdown("**Recent Chats**")
@@ -324,12 +378,18 @@ else:
             logout()
             st.rerun()
 
-    # ── HEADER ──
-    c1, c2 = st.columns([1, 8])
-    with c1:
-        st.image(logo, width=45)
-    with c2:
-        st.markdown(f"**{uni} AI Assistant** — {uni_full}")
+    # ── HEADER — logo & text inline, vertically centered ──
+    h1, h2 = st.columns([1, 10])
+    with h1:
+        st.image(logo, width=40)
+    with h2:
+        st.markdown(
+            f"<div style='display:flex;flex-direction:column;justify-content:center;height:40px;'>"
+            f"<span style='font-weight:700;font-size:15px;line-height:1.2;'>{uni} AI Assistant</span>"
+            f"<span style='color:#888;font-size:12px;'>{uni_full}</span>"
+            f"</div>",
+            unsafe_allow_html=True
+        )
     st.divider()
 
     # ── MESSAGES ──
@@ -386,4 +446,4 @@ else:
             save_chat(st.session_state.username, to_process, full_ans)
             st.rerun()
 
-    st.markdown("<p style='text-align:center;color:#bbb;font-size:11px;margin-top:2rem;'>© 2026 Muhammad Belal | AI University Assistant</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;color:#bbb;font-size:11px;margin-top:1.5rem;'>© 2026 Muhammad Belal | AI University Assistant</p>", unsafe_allow_html=True)
