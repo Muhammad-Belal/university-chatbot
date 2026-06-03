@@ -385,17 +385,21 @@ else:
             st.rerun()
 
     # ── HEADER — logo & text inline, vertically centered ──
-    h1, h2 = st.columns([1, 10])
-    with h1:
-        st.image(logo, width=40)
-    with h2:
+   top_left, top_right = st.columns([8, 2])
+    with top_left:
         st.markdown(
-            f"<div style='display:flex;flex-direction:column;justify-content:center;height:40px;'>"
-            f"<span style='font-weight:700;font-size:15px;line-height:1.2;'>{uni} AI Assistant</span>"
-            f"<span style='color:#888;font-size:12px;'>{uni_full}</span>"
+            f"<div style='display:flex;align-items:center;gap:6px;padding:4px 0 8px 0;'>"
+            f"<img src='{logo}' style='width:40px;height:40px;object-fit:contain;border-radius:6px;mix-blend-mode:multiply;'/>"
+            f"<div style='margin-left:2px;'><span style='font-weight:700;font-size:15px;display:block;line-height:1.2;'>{uni} AI Assistant</span>"
+            f"<span style='color:#888;font-size:12px;'>{uni_full}</span></div>"
             f"</div>",
             unsafe_allow_html=True
         )
+    with top_right:
+        if st.button("↩ Switch Uni", key="sw", use_container_width=True):
+            st.session_state.university = None
+            st.session_state.messages = []
+            st.rerun()
     st.divider()
 
     # ── MESSAGES ──
