@@ -385,7 +385,7 @@ else:
             st.rerun()
 
     # ── HEADER — logo & text inline, vertically centered ──
-   top_left, top_right = st.columns([8, 2])
+    top_left, top_right = st.columns([8, 2])
     with top_left:
         st.markdown(
             f"<div style='display:flex;align-items:center;gap:6px;padding:4px 0 8px 0;'>"
