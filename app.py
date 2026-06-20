@@ -285,7 +285,10 @@ if not st.session_state.logged_in:
                         st.error("Password min 6 characters.")
                     else:
                         ok, msg = create_user(ru, rp, fn)
-                        st.success(msg) if ok else st.error(msg)
+                        if ok:
+                            st.success(msg)
+                        else:
+                            st.error(msg)
                 else:
                     st.warning("Fill all fields.")
 
