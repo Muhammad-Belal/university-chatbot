@@ -606,7 +606,7 @@ Faculty of Law: LLB (5-year)
 BZU - ATTENDANCE POLICY
 ========================================
 
-【DISCIPLINE & ATTENDANCE RULES】
+【ATTENDANCE REQUIREMENTS】
 
 No Student shall:
 - Utter, do, or propagate anything repugnant to Islam
@@ -710,6 +710,36 @@ BZU - HOSTEL RULES
 BZU - FEE STRUCTURE
 ========================================
 
+【FEE STRUCTURE】
+
+Faculty / Program	Fee (Rs.)
+Faculty of Arts & Social Sciences (Economics, Education, History, Political Science, IR, Sociology, Psychology, Philosophy, Fine Arts, Sports Science, etc.)	31,000
+Faculty of Islamic Studies & Languages (Arabic, English, Islamic Studies, Urdu, Saraiki)	31,000
+Faculty of Science (Chemistry, Biochemistry, Mathematics, Physics, Statistics, Botany, Zoology, Microbiology, Biotechnology, Environmental Science)	31,000
+Sub-Campus Vehari (Economics, Psychology, Mathematics)	31,000
+Sub-Campus Lodhran (English, Sociology)	31,000
+Commerce, Banking & Business Administration (BBA, ADP, Supply Chain, FinTech, Digital Marketing, Accounting & Finance, Commerce, Entrepreneurship)	33,000
+Faculty of Engineering & Technology (Civil, Electrical, Mechanical, Computer, Textile, Metallurgy, Building & Arch.)	33,000
+Faculty of Science (CS/IT related) (Computer Science, IT, Telecommunication, Cyber Security)	33,000
+Faculty of Pharmacy (Pharm-D 5-Year)	33,000
+Faculty of Veterinary Sciences (DVM 5-Year, B.Sc. Hons. Poultry Science)	33,000
+Faculty of Agricultural Sciences & Technology (Agriculture, Agri Engg, Forestry, Remote Sensing)	33,000
+Faculty of Food Science & Nutrition (Food Science, Human Nutrition, Dairy Tech, Food Safety)	33,000
+Faculty of Law (LL.B 5-Year)	33,000
+Sub-Campus Lodhran (Information Technology)	33,000
+B. M.Phil / MS Programs (2-Year):
+
+Faculty	Fee (Rs.)
+Faculty of Arts & Social Sciences / Islamic Studies & Languages / Science	35,000
+Faculty of Commerce, Banking & Business Administration / Pharmacy / Agricultural Sciences / Veterinary Sciences / Food Science & Nutrition / Law	37,000
+
+
+【FEE PAYMENT POLICIES】
+- Detailed fee structure available in prospectus
+- Different fee structures for Morning, Evening, and Self Support programs
+- Hostel fees separate from tuition fees
+
+
 【SCHOLARSHIP & FINANCIAL ASSISTANCE】
 Scholarship Cell / Financial Aid Office administered the following scholarships (2024-25):
 - CM's Honhaar Scholarship Program
@@ -725,13 +755,6 @@ Scholarship Cell / Financial Aid Office administered the following scholarships 
 Total disbursement: Over Rs. 228 million
 Beneficiaries: 3,000+ students
 
-【FEE STRUCTURE FOR BS 4-YEAR MORNING PROGRAM 2025】
-(Refer to prospectus fee schedule pages 221-226 for detailed amounts)
-
-【FEE PAYMENT POLICIES】
-- Detailed fee structure available in prospectus
-- Different fee structures for Morning, Evening, and Self Support programs
-- Hostel fees separate from tuition fees
 
 ========================================
 BZU - FACILITIES
